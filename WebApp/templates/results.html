@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Detection Results</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Pixelated font -->
+    <style>
+        /* GLOBAL STYLES */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Raleway', sans-serif;
+            position: relative; /* Relative positioning for the canvas */
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to the background */
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive; /* Pixelated font */
+            font-size: 3rem; /* Large font size */
+            margin-bottom: 0.5em; /* Space below the heading */
+            color: #00BFFF; /* Light blue for contrast */
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.7); /* Glowing effect */
+            z-index: 1; /* Ensure h1 is above the canvas */
+        }
+
+        h4 {
+            font-size: 1.5rem; /* Slightly larger font size */
+            color: #00BFFF; /* Light blue */
+            text-align: center;
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.5); /* Subtle glowing effect */
+            margin-top: 0;
+            margin-bottom: 0; /* Remove space below the result text */
+            z-index: 1; /* Ensure h4 is above the canvas */
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.5)); /* Gradient background */
+            padding: 2em; /* Padding around content */
+            border-radius: 1.25em; /* Rounded corners */
+            border: 2px solid #00BFFF; /* Blue border */
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5); /* Glowing shadow */
+            backdrop-filter: blur(8px); /* Blur effect */
+            transition: border-radius 0.3s ease;
+            max-width: 80%; /* Responsive width */
+            text-align: center; /* Center text inside the container */
+            z-index: 1; /* Ensure container is above the canvas */
+        }
+
+        .result-container:hover {
+            border-radius: 1.5em; /* Round corners on hover */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <h1>Results of the Detection</h1>
+    <div class="result-container">
+        <h4>{{message}} {{ answer }}</h4>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const fontSize = 10;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Background color with slight transparency
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#3BB143'; // Text color
+            ctx.font = fontSize + 'px monospace';
+
+            for (let x = 0; x < drops.length; x++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, x * fontSize, drops[x] * fontSize);
+
+                if (drops[x] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[x] = 0;
+                }
+                drops[x]++;
+            }
+        }
+
+        setInterval(draw, 35);
+    </script>
+</body>
+</html>
